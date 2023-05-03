@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState } from 'react'
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState<string>('');
   const [chatLog, setChatLog] = useState<any>([]);
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
@@ -17,7 +17,7 @@ export default function Home() {
     const url = 'https://api.openai.com/v1/chat/completions';
     const headers = {
       'Content-type': 'application/json',
-      'Authorization': `Bearer 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`
+      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
     };
     const data = {
       model: "gpt-3.5-turbo-0301",
