@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import axios from 'axios'
 import { Inter } from 'next/font/google'
 import { useState } from 'react'
 
@@ -15,6 +16,24 @@ export default function Home() {
     setChatLog((prevChatLog:any) => [...prevChatLog, {type: 'user', message: inputValue}]);
 
     setInputValue('');
+  }
+  const sendMessage = (message:string) => {
+    const url = 'https://api.openai.com/chat/completions';
+    const headers = {
+      'Content-type': 'application/json',
+      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
+    };
+    const data = {
+      model: "gpt-4",
+      messages: [{"role": "user", "content": message}]
+    }
+
+    setIsLoading(true);
+
+    axios.post(url, data, { headers: headers }).then((response) => {
+      // console.log(response);
+      setChatLog((prevChatLog:any)=> [...prevChatLog, {type: 'bot', message: response.data.choices[0].message.content}])
+    })
   }
   interface Message {
     message: String
