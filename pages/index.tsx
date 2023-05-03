@@ -1,14 +1,9 @@
-import Image from 'next/image'
 import axios from 'axios'
-import { Inter } from 'next/font/google'
 import { useState } from 'react'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   const [inputValue, setInputValue] = useState('');
   const [chatLog, setChatLog] = useState<any>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
@@ -19,24 +14,21 @@ export default function Home() {
   }
 
   const sendMessage = (message:string) => {
-    const url = 'https://api.openai.com/chat/completions';
+    const url = 'https://api.openai.com/v1/chat/completions';
     const headers = {
       'Content-type': 'application/json',
-      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
+      'Authorization': `Bearer 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`
     };
     const data = {
       model: "gpt-3.5-turbo-0301",
       messages: [{"role": "user", "content": message}]
     }
-
-    setIsLoading(true);
-
+    
     axios.post(url, data, { headers: headers }).then((response) => {
-      // console.log(response);
+      console.log(response);
       setChatLog((prevChatLog:any)=> [...prevChatLog, {type: 'bot', message: response.data.choices[0].message.content}]);
-      setIsLoading(false);
+      
     }).catch((error) => {
-      setIsLoading(false);
       console.log(error);
       
     })
@@ -66,7 +58,7 @@ export default function Home() {
         </div>
       </div>
       <form onSubmit={handleSubmit} className='flex-none p-6'>
-        <div className='flex-rounded-lg border border-gray-700 bg-gray-800'>
+        <div className='flex rounded-lg border border-gray-700 bg-gray-800'>
           <input
           type="text"
           className='flex-grow px-4 py-2 bg-transparent text-white focus:outline-none'
